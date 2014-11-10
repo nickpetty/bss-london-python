@@ -144,7 +144,7 @@ class Blu:
 		#print packet
 		self.s.send(packet.decode('hex'))
 
-blu = Blu('192.168.1.100')
+#blu = Blu('192.168.1.100')
 #for x in blu.subscribeRaw('1e19','03','000101', '0001'):
 #	print x
 #for x in blu.subscribePercent('1e19','03','000101','0000'):
