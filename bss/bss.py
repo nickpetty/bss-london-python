@@ -32,10 +32,10 @@ class Blu:
 
 		while 1:
 			# Receive message - Encode as hex - Remove 1st 22 char - Send to specialChar function -
-			# Capture 1st 8 returned chars - Decode as hex - Unpack signed 32-bit big-endian int into 'long int' - 
+			# Capture 1st 8 returned chars - Decode as hex - Unpack signed 32-bit big-endian int into 'long int' -
 			# Divide by 65536 - round to two decimal points
-			yield round(float(struct.unpack('>l', self.specialChar(self.s.recv(2048).encode('hex')[22:], 1)[:8].decode('hex'))[0])/65536, 2)
-		
+			yield round(float(struct.unpack('>l', self.specialChar(self.s.recv(2048).encode('hex')[24:], 1)[:8].decode('hex'))[0])/65536, 2)
+
 		self.s.close()
 
 	def subscribeRaw(self, node, vdevice, obj, sv):
@@ -47,9 +47,9 @@ class Blu:
 		self.s.send(str(packet.decode('hex')))
 		#print 'Subscribed'
 		#print 'Waiting for data'
-		
+
 		while 1:
-			yield int(self.s.recv(2048).encode('hex')[22:][:8]) * 1
+			yield int(self.s.recv(2048).encode('hex')[24:][:8]) * 1
 
 	def specialChar(self, subMsg, reverse):
 		subs = {'02':'1B82', '03':'1B83', '06':'1B86', '15':'1B95', '1B':'1B9B'}
@@ -82,7 +82,7 @@ class Blu:
 							#print str(subAry)
 							#print 'replaced byte with ' + key
 							#print 'removing ' + str(subAry[pos+1])
-							subAry.pop(pos+1) #remove byte in next position.					
+							subAry.pop(pos+1) #remove byte in next position.
 							#print str(subAry)
 				pos += 1
 
@@ -135,7 +135,7 @@ class Blu:
 		addressData = str(di) + str(node) + str(vdevice) + str(obj) + str(sv)
 		#addressData = '0x88 0x1E 0x19 0x03 0x00 0x01 0x01 0x00 0x01'.replace('0x','').replace(' ','')
 		msg = str('000000') + str(hex(int(state))).replace('0x','0')
-		
+
 
 		chkSum = self.specialChar(self.checksum(addressData + msg),0)
 		addressData = self.specialChar(addressData, 0)
@@ -151,7 +151,3 @@ class Blu:
 #	print x
 #blu.setPercent('1e19', '03', '000101', '0000', '75')
 #blu.setState('1e19', '03', '000103', '0002', '1')
-
-
-
-
